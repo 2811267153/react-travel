@@ -2,43 +2,23 @@
 
 import React from 'react';
 
-import { Button, Layout, Input, Menu, Dropdown, Space } from 'antd';
+import { Button, Layout, Input, Menu, Dropdown } from 'antd';
 import Typography from 'antd/es/typography';
-import type { MenuProps } from 'antd';
 import '../../App.css';
-import { GlobalOutlined } from '@ant-design/icons';
 import {withRouter, RouteComponentProps} from "../../helper/withRouter";
 import store from "../../store/store";
 import {LanguageState} from "../../store/language/languagRedux";
 import { withTranslation, WithTranslation } from 'react-i18next';
+import {addLanguageActionCreator, changeLanguageActionCreator} from "../../store/language/languageActions";
 // import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
 
 const onSearch = (value: string) => console.log(value);
 
-
-const meunData = [
-	//首页机票酒店火车票度假团购门票当地人汽车票行程设计攻略旅游快讯
-	{ key: 1, lable: '首页' },
-	{ key: 2, lable: '机票' },
-	{ key: 3, lable: '酒店' },
-	{ key: 4, lable: '火车' },
-	{ key: 5, lable: '团购' },
-	{ key: 6, lable: '度假' },
-	{ key: 7, lable: '门票' },
-	{ key: 8, lable: '当地人' },
-	{ key: 9, lable: '汽车票' },
-	{ key: 10, lable: '行程设计' },
-	{ key: 11, lable: '攻略' },
-	{ key: 12, lable: '旅游咨询' },
-];
-
 interface State extends LanguageState{};
 class HeaderCompnent extends React.Component<RouteComponentProps & WithTranslation,State>{
 	constructor(props: any) {
-
 		super(props);
 		const storeState = store.getState();
-
 		this.state = {
 			language: storeState.language,
 			languageList: storeState.languageList
@@ -48,16 +28,10 @@ class HeaderCompnent extends React.Component<RouteComponentProps & WithTranslati
 		console.log(e.key)
 		if (e.key === "new") {
 			//处理新语言提那家
-			const action = {
-				type: "add_language",
-				payload: {code: "new_lang", name: "新语言"}
-			}
+			const action = addLanguageActionCreator("新语言",  "new_lang")
 			store.dispatch(action)
 		}else {
-			const action = {
-				type: "change_language",
-				payload: e.key
-			};
+			const action = changeLanguageActionCreator(e.key)
 			store.dispatch(action)
 			store.subscribe(() => {
 				const storetate = store.getState()
