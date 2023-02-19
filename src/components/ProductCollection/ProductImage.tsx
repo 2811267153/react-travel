@@ -1,10 +1,11 @@
 /** @format */
 
-import react from 'react';
+import React from 'react';
 import { Image } from 'antd';
 import { Typography } from 'antd';
+import {Link} from 'react-router-dom';
 
-interface PropsTypes {
+interface PropsTypes  {
 	id: string | number;
 	size: 'large' | 'small';
 	image: string;
@@ -12,16 +13,16 @@ interface PropsTypes {
 	title: string;
 }
 
-export const ProductImge: React.FC<PropsTypes> = ({
+export const PronductImage: React.FC<PropsTypes> = ({
 	id,
 	size,
 	image,
 	price,
-	title,
+	title
 }) => {
-	return (
-		<div>
-			{size == 'large' ? (
+	 return (
+		<Link to={`detail/${id}`}>
+			{size === 'large' ? (
 				<Image src={image} height={285} width={490}></Image>
 			) : (
 				<Image src={image} height={120} width={240}></Image>
@@ -30,6 +31,7 @@ export const ProductImge: React.FC<PropsTypes> = ({
 				<Typography.Text type="secondary">{title.slice(0, 25)}</Typography.Text>
 				<Typography.Text type="danger" strong>${price}</Typography.Text>
 			</div>
-		</div>
+		</Link>
 	);
 };
+// export const PronductImage = withRouter(ProductImgeComponent)

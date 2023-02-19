@@ -7,6 +7,7 @@ import Typography from 'antd/es/typography';
 import type { MenuProps } from 'antd';
 import '../../App.css';
 import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
+import { useLocation, useNavigate, useParams,} from "react-router-dom";
 // import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
 
 const onSearch = (value: string) => console.log(value);
@@ -34,6 +35,9 @@ const menuProps = {
 	items,
 };
 export const Header: React.FC = () => {
+	const history = useNavigate()
+	const location = useLocation()
+	const params = useParams()
 	return (
 		<div>
 			<div className="w">
@@ -55,16 +59,16 @@ export const Header: React.FC = () => {
 							</Typography.Text>
 						</div>
 						<Button.Group>
-							<Button type="link" className="btn-login">
+							<Button type="link" className="btn-login" onClick={() => history("register")}>
 								注册
 							</Button>
-							<Button type="link" className="btn-login">
+							<Button type="link" className="btn-login" onClick={() => history("singIn")}>
 								登陆
 							</Button>
 						</Button.Group>
 					</div>
 
-					<Typography.Title
+					<Typography.Title onClick={() => history('/')}
 						style={{ margin: 0, lineHeight: '100px', textAlign: 'center' }}
 						level={2}>
 						React旅游网
