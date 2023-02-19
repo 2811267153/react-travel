@@ -6,16 +6,16 @@ import { Button, Layout, Input, Menu, Dropdown, Space } from 'antd';
 import Typography from 'antd/es/typography';
 import type { MenuProps } from 'antd';
 import '../../App.css';
-import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
+import { GlobalOutlined } from '@ant-design/icons';
 import {withRouter, RouteComponentProps} from "../../helper/withRouter";
+import store from "../../store/store";
+import {LanguageState} from "../../store/language/languagRedux";
+import { withTranslation, WithTranslation } from 'react-i18next';
 // import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
 
 const onSearch = (value: string) => console.log(value);
 
-const items: MenuProps['items'] = [
-	{ key: 1, label: '汉语', icon: <GlobalOutlined /> },
-	{ key: 2, label: 'English', icon: <GlobalOutlined /> },
-];
+
 const meunData = [
 	//首页机票酒店火车票度假团购门票当地人汽车票行程设计攻略旅游快讯
 	{ key: 1, lable: '首页' },
@@ -31,38 +31,73 @@ const meunData = [
 	{ key: 11, lable: '攻略' },
 	{ key: 12, lable: '旅游咨询' },
 ];
-const menuProps = {
-	items,
-};
-class HeaderCompnent extends React.Component<RouteComponentProps>{
+
+interface State extends LanguageState{};
+class HeaderCompnent extends React.Component<RouteComponentProps & WithTranslation,State>{
+	constructor(props: any) {
+
+		super(props);
+		const storeState = store.getState();
+
+		this.state = {
+			language: storeState.language,
+			languageList: storeState.languageList
+		}
+	}
+	menuClickHandler = (e: any) => {
+		console.log(e.key)
+		if (e.key === "new") {
+			//处理新语言提那家
+			const action = {
+				type: "add_language",
+				payload: {code: "new_lang", name: "新语言"}
+			}
+			store.dispatch(action)
+		}else {
+			const action = {
+				type: "change_language",
+				payload: e.key
+			};
+			store.dispatch(action)
+			store.subscribe(() => {
+				const storetate = store.getState()
+				this.setState({
+					language: storetate.language,
+					languageList: storetate.languageList
+				})
+			})
+		}
+	}
 	render() {
-		const {navigate: history} = this.props
+		const {navigate: history, t} = this.props
 		return (
 			<div>
 				<div className="w">
 					<Layout.Header className="app-header">
 						<div className="app-header-slong">
 							<div>
-								<Dropdown menu={menuProps}>
-									<a>
-										<Space className="btn-login">
-											语言
-											<DownOutlined />
-										</Space>
-									</a>
-								</Dropdown>
+								<Dropdown.Button style={{marginTop: "27px", width: "100px"}} overlay={
+									<Menu onClick={this.menuClickHandler}>
+										{this.state.languageList.map(item => {
+											return <Menu.Item key={item.code}>{item.name}</Menu.Item>
+										})}
+										<Menu.Item key={"new"}>{t("header.add_new_language")}</Menu.Item>
+									</Menu>
+								}>
+									{this.state.language === "zh" ? "中文" : "English"}
+								</Dropdown.Button>
 								<Typography.Text
 									style={{ marginLeft: '10px' }}
 									className="btn-login">
-									让旅游更幸福
+									{t("header.slogan")}
 								</Typography.Text>
 							</div>
 							<Button.Group>
 								<Button type="link" className="btn-login" onClick={() => history("register")}>
-									注册
+									{t("header.register")}
 								</Button>
 								<Button type="link" className="btn-login" onClick={() => history("singIn")}>
-									登陆
+									{t("header.signin")}
 								</Button>
 							</Button.Group>
 						</div>
@@ -70,7 +105,7 @@ class HeaderCompnent extends React.Component<RouteComponentProps>{
 						<Typography.Title onClick={() => history('/')}
 										  style={{ margin: 0, lineHeight: '100px', textAlign: 'center' }}
 										  level={2}>
-							React旅游网
+							{t("header.title")}
 						</Typography.Title>
 						<div className="search-warp">
 							<Input.Search
@@ -83,18 +118,30 @@ class HeaderCompnent extends React.Component<RouteComponentProps>{
 							/>
 						</div>
 						<Menu
-							style={{ borderRadius: '5px' }}
-							mode={'horizontal'}
-							items={meunData.map((item) => {
-								return {
-									key: item.key,
-									label: item.lable,
-								};
-							})}></Menu>
+							mode={"horizontal"}
+							items={[
+								{ key: "1", label: t("header.home_page") },
+								{ key: "2", label: t("header.weekend") },
+								{ key: "3", label: t("header.group") },
+								{ key: "4", label: t("header.backpack") },
+								{ key: "5", label: t("header.private") },
+								{ key: "6", label: t("header.cruise") },
+								{ key: "7", label: t("header.hotel") },
+								{ key: "8", label: t("header.local") },
+								{ key: "9", label: t("header.theme") },
+								{ key: "10", label: t("header.custom") },
+								{ key: "11", label: t("header.study") },
+								{ key: "12", label: t("header.visa") },
+								{ key: "13", label: t("header.enterprise") },
+								{ key: "14", label: t("header.high_end") },
+								{ key: "15", label: t("header.outdoor") },
+								{ key: "16", label: t("header.insurance") },
+							]}
+						/>
 					</Layout.Header>
 				</div>
 			</div>
 		);
 	}
 };
-export const Header = withRouter(HeaderCompnent)
+export const Header = withTranslation()(withRouter(HeaderCompnent))
