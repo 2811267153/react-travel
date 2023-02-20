@@ -10,7 +10,7 @@ import {RootState} from "../../store/store";
 import {
     recommendProductActionCreator,
     recommendProductSuccesActionCreator,
-    recommendProductFallActionCreator
+    recommendProductFallActionCreator, giveMeDataActionCreateor
 } from "../../store/recommendProduct/recommmendProducrAction"
 
 //创建connect映射数据
@@ -23,31 +23,17 @@ const mapStateToProps = (state: RootState) => {
 }
 const mapDispachToProps = (dispach: any) => {
     return {
-        recommendProductActionCreator: () => {
-            dispach(recommendProductActionCreator())
+        giveMeData: () => {
+            dispach(giveMeDataActionCreateor())
         },
-        recommendProductFallActionCreator: (error: any) => {
-            dispach(recommendProductFallActionCreator(error))
-        },
-        recommendProductSuccesActionCreator: (data: any) => {
-            dispach(recommendProductSuccesActionCreator(data))
-        }
     }
 }
 //讲类型混合在一起
 type PropsType = WithTranslation & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispachToProps>
 
 class HomePageComponent extends React.Component<PropsType> {
-    async componentDidMount() {
-        this.props.recommendProductActionCreator()
-        try {
-            const {data} = await axios.get("http://123.56.149.216:8080/api/productCollections")
-            this.props.recommendProductSuccesActionCreator(data)
-        } catch (e) {
-            if (e instanceof Error) {
-                this.props.recommendProductFallActionCreator(e)
-            }
-        }
+    componentDidMount() {
+        this.props.giveMeData()
     }
 
     render() {
