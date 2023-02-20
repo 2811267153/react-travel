@@ -4,55 +4,60 @@ import sideImage1 from "../../assets/image/sider_2019_12-09.png";
 import React from "react";
 import {withTranslation, WithTranslation} from "react-i18next";
 import axios from "axios";
-import {productList1, productList2} from "../../components/common/mockup";
 import {Spin} from "antd/lib";
+import {connect} from "react-redux";
+import {RootState} from "../../store/store";
+import {
+    recommendProductActionCreator,
+    recommendProductSuccesActionCreator,
+    recommendProductFallActionCreator
+} from "../../store/recommendProduct/recommmendProducrAction"
 
-//
-interface State {
-    productList: any[],
-    loading: boolean,
-    error: string | null
+//创建connect映射数据
+const mapStateToProps = (state: RootState) => {
+    return {
+        loading: state.recommendProduct.loading,
+        error: state.recommendProduct.errpr,
+        productList: state.recommendProduct.productList
+    }
 }
-
-class HomePageComponent extends React.Component<WithTranslation, State> {
-
-    //初始化函数 把产品列表初始化为空数组
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            productList: [],
-            loading: true,
-            error: null,
+const mapDispachToProps = (dispach: any) => {
+    return {
+        recommendProductActionCreator: () => {
+            dispach(recommendProductActionCreator())
+        },
+        recommendProductFallActionCreator: (error: any) => {
+            dispach(recommendProductFallActionCreator(error))
+        },
+        recommendProductSuccesActionCreator: (data: any) => {
+            dispach(recommendProductSuccesActionCreator(data))
         }
     }
+}
+//讲类型混合在一起
+type PropsType = WithTranslation & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispachToProps>
 
+class HomePageComponent extends React.Component<PropsType> {
     async componentDidMount() {
+        this.props.recommendProductActionCreator()
         try {
             const {data} = await axios.get("http://123.56.149.216:8080/api/productCollections")
-            this.setState({
-                productList: data,
-                loading: false,
-                error: null
-            })
-        }catch (e) {
+            this.props.recommendProductSuccesActionCreator(data)
+        } catch (e) {
             if (e instanceof Error) {
-                this.setState({
-                    loading: false,
-                    error: e.message
-                })
+                this.props.recommendProductFallActionCreator(e)
             }
         }
     }
 
     render() {
-        const {t} = this.props
-        const {productList, loading, error} = this.state
-        if(loading) {
+        const {t, productList, loading, error} = this.props
+        if (loading) {
             return <Spin size="large"></Spin>
         }
 
-        if(error) {
-            return  <>网站出错: {error}</>
+        if (error) {
+            return <>网站出错: {error}</>
         }
         return (
             <div className="page-content w">
@@ -68,10 +73,12 @@ class HomePageComponent extends React.Component<WithTranslation, State> {
                     </Row>
                     <ProductCollection title={<Typography.Title level={3}
                                                                 type="warning">{t("home_page.hot_recommended")} </Typography.Title>}
-                                       products={productList[0].touristRoutes} sideImage={sideImage1}></ProductCollection>
+                                       products={productList[0].touristRoutes}
+                                       sideImage={sideImage1}></ProductCollection>
                     <ProductCollection title={<Typography.Title level={3}
                                                                 type="danger"> {t("home_page.new_arrival")} </Typography.Title>}
-                                       products={productList[1].touristRoutes} sideImage={sideImage1}></ProductCollection>
+                                       products={productList[1].touristRoutes}
+                                       sideImage={sideImage1}></ProductCollection>
                     <ProductCollection
                         title={<Typography.Title level={3}
                                                  type="success"> {t("home_page.domestic_travel")} </Typography.Title>}
@@ -82,4 +89,4 @@ class HomePageComponent extends React.Component<WithTranslation, State> {
     }
 }
 
-export const HomePage = withTranslation()(HomePageComponent)
+export const HomePage = connect(mapStateToProps, mapDispachToProps)(withTranslation()(HomePageComponent))

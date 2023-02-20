@@ -18,8 +18,8 @@ const onSearch = (value: string) => console.log(value);
 
 const mapStateToProps = (state: RootState) => {
     return {
-        language: state.language,
-        languageList: state.languageList,
+        language: state.language.language,
+        languageList: state.language.languageList,
     }
 }
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
