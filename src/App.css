@@ -1,5 +1,5 @@
 /** @format */
-body {
+* {
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
@@ -34,5 +34,6 @@ body {
 	text-align: center;
 }
 .page-content {
-  
+	background-color: #fff;
+	padding: 15px;
 }
