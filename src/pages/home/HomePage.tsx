@@ -3,14 +3,10 @@ import {Col, Row, Typography} from "antd";
 import sideImage1 from "../../assets/image/sider_2019_12-09.png";
 import React from "react";
 import {withTranslation, WithTranslation} from "react-i18next";
-import axios from "axios";
 import {Spin} from "antd/lib";
 import {connect} from "react-redux";
 import {RootState} from "../../store/store";
-import {
-    recommendProductActionCreator,
-    recommendProductSuccesActionCreator,
-    recommendProductFallActionCreator, giveMeDataActionCreateor
+import { giveMeDataActionCreateor
 } from "../../store/recommendProduct/recommmendProducrAction"
 
 //创建connect映射数据
