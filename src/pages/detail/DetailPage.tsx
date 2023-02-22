@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {Header, ProductIntro} from "../../components";
+import {Header, ProductIntro, ProductComments} from "../../components";
 import {Col, DatePicker, Row, Spin, Space, Divider, Typography} from "antd";
+import {commentMockData} from "../../components/ProductComments/mockup";
 
 export const DetailPage: React.FC = () => {
     const props = useParams<"touristRouteId">()
@@ -56,14 +57,26 @@ export const DetailPage: React.FC = () => {
                 </>
                 <Divider orientation={"center"}>
                     <Typography.Title level={3}>产品特色</Typography.Title>
-                    <div dangerouslySetInnerHTML={{__html:product.features}} style={{marginTop: 50}}></div>
                 </Divider>
-                {/*<div style={{width: ""}}>*/}
-                {/*    <Divider orientation={"center"}>*/}
-                {/*            <Typography.Title level={3}>费用</Typography.Title>*/}
-                {/*            <div dangerouslySetInnerHTML={{__html:product.notes}} style={{marginTop: 50, width: "1220px"}}></div>*/}
-                {/*    </Divider>*/}
-                {/*</div>*/}
+                <div dangerouslySetInnerHTML={{__html:product.features}} style={{marginTop: 50}}></div>
+
+                <div style={{marginTop: 40}}>
+                    <Divider orientation={"center"}>
+                            <Typography.Title level={3}>费用</Typography.Title>
+                    </Divider>
+                    <div dangerouslySetInnerHTML={{__html:product.fees}} style={{marginTop: 50}}></div>
+                </div>
+                <div style={{marginTop: 40}}>
+                    <Divider orientation={"center"}>
+                        <Typography.Title level={3}>费用</Typography.Title>
+                    </Divider>
+                    <div dangerouslySetInnerHTML={{__html:product.notes}} style={{marginTop: 50}}></div>
+                </div>
+                <Divider plain>
+                        <Typography.Title level={3}>产品特色</Typography.Title>
+                </Divider>
+                <ProductComments data={commentMockData}></ProductComments>
+
             </div>
         </div>
     )
