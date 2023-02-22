@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {Header} from "../../components";
-import {Col, DatePicker, Row, Spin, Space} from "antd";
-import {ProductIntro} from "../../components";
+import {Header, ProductIntro} from "../../components";
+import {Col, DatePicker, Row, Spin, Space, Divider, Typography} from "antd";
 
 export const DetailPage: React.FC = () => {
     const props = useParams<"touristRouteId">()
@@ -12,14 +11,13 @@ export const DetailPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null)
 
     const {RangePicker} = DatePicker;
-    console.log(props)
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
             try {
                 const {data} = await axios.get(`http://123.56.149.216:8080/api/touristRoutes/${props.touristRouteId}`)
                 setProducr(data)
-                console.log(data)
+                console.log("data", data)
                 setLoading(false)
                 setError(null)
             } catch (e) {
@@ -56,6 +54,16 @@ export const DetailPage: React.FC = () => {
                         </Col>
                     </Row>
                 </>
+                <Divider orientation={"center"}>
+                    <Typography.Title level={3}>产品特色</Typography.Title>
+                    <div dangerouslySetInnerHTML={{__html:product.features}} style={{marginTop: 50}}></div>
+                </Divider>
+                {/*<div style={{width: ""}}>*/}
+                {/*    <Divider orientation={"center"}>*/}
+                {/*            <Typography.Title level={3}>费用</Typography.Title>*/}
+                {/*            <div dangerouslySetInnerHTML={{__html:product.notes}} style={{marginTop: 50, width: "1220px"}}></div>*/}
+                {/*    </Divider>*/}
+                {/*</div>*/}
             </div>
         </div>
     )
