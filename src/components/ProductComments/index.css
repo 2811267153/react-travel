@@ -24,3 +24,15 @@
 .comments-contents-img img {
     width: 100%;
 }
+.Anchor {
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba( 255, 255, 255, 0.25 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    width: 100% !important;
+    height: 50px;
+}
+.ant-anchor {
+    width: 100%;
+}
