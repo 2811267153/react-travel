@@ -7,6 +7,7 @@ import {commentMockData} from "../../components/ProductComments/mockup";
 import {productDetailSlice} from "../../store/productDetail/slice";
 import {useSelector} from "../../store/hooks";
 import {useDispatch} from "react-redux";
+
 export const DetailPage: React.FC = () => {
     const props = useParams<"touristRouteId">()
     // const [loading, setLoading] = useState<boolean>(true)
@@ -14,23 +15,23 @@ export const DetailPage: React.FC = () => {
     // const [error, setError] = useState<string | null>(null)
     const loading = useSelector(state => state.productDetail.loading)
     const error = useSelector(state => state.productDetail.error)
-    const data = useSelector(state => state.productDetail.data)
+    const product = useSelector(state => state.productDetail.data)
 
-
+    const dispatch = useDispatch()
 
     const {RangePicker} = DatePicker;
     useEffect(() => {
+        //这里的actions是一个函数 所以必须要小括号
+        dispatch(productDetailSlice.actions.fetchStart())
         const fetchData = async () => {
-            setLoading(true)
             try {
                 const {data} = await axios.get(`http://123.56.149.216:8080/api/touristRoutes/${props.touristRouteId}`)
-                setProducr(data)
-                console.log("data", data)
-                setLoading(false)
-                setError(null)
+                dispatch(productDetailSlice.actions.fetchSuccess(data))
+
             } catch (e) {
-                setError(e instanceof Error ? e.message : "error")
-                setLoading(false)
+                if(e instanceof Error){
+                    dispatch(productDetailSlice.actions.fetchFail(e.message))
+                }
             }
         }
         fetchData()
@@ -64,21 +65,21 @@ export const DetailPage: React.FC = () => {
                     </Row>
                 </>
                 <Anchor className="Anchor" direction="horizontal"
-                    items={[
-                    {
-                        key: '1',
-                        href: '#feature',
-                        title: 'Part 1',
-                    },         {
-                        key: '2',
-                        href: '#fees',
-                        title: 'Part 2',
-                    }, {
-                            key: '3',
-                            href: '#notes',
-                            title: 'Part 3',
-                        },
-                ]}>
+                        items={[
+                            {
+                                key: '1',
+                                href: '#feature',
+                                title: 'Part 1',
+                            }, {
+                                key: '2',
+                                href: '#fees',
+                                title: 'Part 2',
+                            }, {
+                                key: '3',
+                                href: '#notes',
+                                title: 'Part 3',
+                            },
+                        ]}>
                 </Anchor>
                 <div id="feature">
                     <Divider orientation={"center"}>
