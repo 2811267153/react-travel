@@ -4,12 +4,19 @@ import axios from "axios";
 import {Header, ProductIntro, ProductComments} from "../../components";
 import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor, Menu} from "antd";
 import {commentMockData} from "../../components/ProductComments/mockup";
-
+import {productDetailSlice} from "../../store/productDetail/slice";
+import {useSelector} from "../../store/hooks";
+import {useDispatch} from "react-redux";
 export const DetailPage: React.FC = () => {
     const props = useParams<"touristRouteId">()
-    const [loading, setLoading] = useState<boolean>(true)
-    const [product, setProducr] = useState<any>(null)
-    const [error, setError] = useState<string | null>(null)
+    // const [loading, setLoading] = useState<boolean>(true)
+    // const [product, setProducr] = useState<any>(null)
+    // const [error, setError] = useState<string | null>(null)
+    const loading = useSelector(state => state.productDetail.loading)
+    const error = useSelector(state => state.productDetail.error)
+    const data = useSelector(state => state.productDetail.data)
+
+
 
     const {RangePicker} = DatePicker;
     useEffect(() => {
