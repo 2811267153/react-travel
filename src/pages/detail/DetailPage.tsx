@@ -5,10 +5,12 @@ import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor,} from "a
 import {commentMockData} from "../../components/ProductComments/mockup";
 import {getProductDetail} from "../../store/productDetail/slice";
 import {useAppDispatch, useSelector,} from "../../store/hooks";
+import { LoadingOutlined } from '@ant-design/icons';
 
 type MatchParams = {
     touristRouteId: string;
 };
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 export const DetailPage: React.FC = () => {
     const {touristRouteId} = useParams<MatchParams>()
     // const [loading, setLoading] = useState<boolean>(true)
@@ -28,9 +30,20 @@ export const DetailPage: React.FC = () => {
         }
     }, [])
     if (loading) {
-        return <Spin size="large"></Spin>
+        return (
+            <Spin
+                indicator={antIcon}
+                size="large"
+                style={{
+                    marginTop: 400,
+                    marginBottom: 400,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    width: "100%",
+                }}
+            />
+        );
     }
-
     if (error) {
         return <>网站出错: {error}</>
     }

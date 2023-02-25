@@ -42,7 +42,9 @@ export const productDetailSlice = createSlice({
         //定义接口成功时的数据
         [getProductDetail.fulfilled.type]: (state, action) => {
             state.data = action.payload
+            console.log(" action.payload",  action.payload)
             state.loading = false
+
             state.error = null
         },
         //定义接口失败时的数据

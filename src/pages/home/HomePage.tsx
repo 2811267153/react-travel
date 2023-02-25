@@ -8,6 +8,9 @@ import {connect} from "react-redux";
 import {RootState} from "../../store/store";
 import { giveMeDataActionCreateor
 } from "../../store/recommendProduct/recommmendProducrAction"
+import {LoadingOutlined} from "@ant-design/icons";
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
 //创建connect映射数据
 const mapStateToProps = (state: RootState) => {
@@ -34,8 +37,21 @@ class HomePageComponent extends React.Component<PropsType> {
 
     render() {
         const {t, productList, loading, error} = this.props
+
         if (loading) {
-            return <Spin size="large"></Spin>
+            return (
+                <Spin
+                    indicator={antIcon}
+                    size="large"
+                    style={{
+                        marginTop: 400,
+                        marginBottom: 400,
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        width: "100%",
+                    }}
+                />
+            );
         }
 
         if (error) {

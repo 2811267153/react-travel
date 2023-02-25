@@ -20,7 +20,7 @@ import {changeLanguage} from "i18next";
 import {useTranslation} from "react-i18next";
 // import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
 
-const onSearch = (value: string) => console.log(value);
+
 
 const items: MenuProps['items'] = [
     {key: 1, label: '汉语', icon: <GlobalOutlined/>},
@@ -58,13 +58,14 @@ export const Header: React.FC = () => {
             dispatch(changeLanguageActionCreator(e.key))
         }
     }
+    const navigate = useNavigate();
     return (
         <div>
             <div className="w">
                 <Layout.Header className="app-header">
                     <div className="app-header-slong">
                         <div>
-                            <Dropdown.Button style={{marginTop: "27px", width: "100px"}} overlay={
+                            <Dropdown.Button style={{border: "none"}} overlay={
                                 <Menu onClick={menuClickHandler}>
                                     {languageList.map(item => {
                                         return <Menu.Item key={item.code}>{item.name}</Menu.Item>
@@ -80,11 +81,11 @@ export const Header: React.FC = () => {
                                 {t("header.add_new_language")}
                             </Typography.Text>
                         </div>
-                        <Button.Group>
-                            <Button type="link" className="btn-login" onClick={() => history("register")}>
+                        <Button.Group style={{border: "none"}}>
+                            <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("register")}>
                                 {t("header.register")}
                             </Button>
-                            <Button type="link" className="btn-login" onClick={() => history("singIn")}>
+                            <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("singIn")}>
                                 {t("header.signin")}
                             </Button>
                         </Button.Group>
@@ -97,12 +98,13 @@ export const Header: React.FC = () => {
                     </Typography.Title>
                     <div className="search-warp">
                         <Input.Search
-                            placeholder="input search text"
                             allowClear
                             enterButton="Search"
                             size="large"
                             style={{width: '80%'}}
-                            onSearch={onSearch}
+                            onSearch={keywords => {
+                                navigate('/search/' + keywords)
+                            }}
                         />
                     </div>
                     <Menu
