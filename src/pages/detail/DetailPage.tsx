@@ -5,12 +5,13 @@ import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor,} from "a
 import {commentMockData} from "../../components/ProductComments/mockup";
 import {getProductDetail} from "../../store/productDetail/slice";
 import {useAppDispatch, useSelector,} from "../../store/hooks";
-import { LoadingOutlined } from '@ant-design/icons';
+import {LoadingOutlined} from '@ant-design/icons';
+import {MainLayout} from "../../layout";
 
 type MatchParams = {
     touristRouteId: string;
 };
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>
 export const DetailPage: React.FC = () => {
     const {touristRouteId} = useParams<MatchParams>()
     // const [loading, setLoading] = useState<boolean>(true)
@@ -24,7 +25,7 @@ export const DetailPage: React.FC = () => {
 
     const {RangePicker} = DatePicker;
     useEffect(() => {
-        if({touristRouteId}){
+        if ({touristRouteId}) {
             // 因为这里的dispatch 类型和我们传入的类型不一致 所以 我们需要手动在store添加一个类型
             dispatch(getProductDetail(touristRouteId!))
         }
@@ -48,68 +49,63 @@ export const DetailPage: React.FC = () => {
         return <>网站出错: {error}</>
     }
     return (
-
-        <div>
-            <Header/>
-            <div className="page-content w">
-                <>
-                    <Row>
-                        <Col span={13}>
-                            <ProductIntro coupons={product.coupons} discount={product.discount}
-                                          touristRoutePictures={product.touristRoutePictures} price={product.price}
-                                          rating={product.rating}
-                                          shortDescription={product.shortDescription}
-                                          title={product.title}></ProductIntro>
-                        </Col>
-                        <Col span={11}>
-                            <Space direction="vertical" size={12}>
-                                <RangePicker style={{marginTop: "40px"}}/>
-                            </Space>
-                        </Col>
-                    </Row>
-                </>
-                <Anchor className="Anchor" direction="horizontal"
-                        items={[
-                            {
-                                key: '1',
-                                href: '#feature',
-                                title: 'Part 1',
-                            }, {
-                                key: '2',
-                                href: '#fees',
-                                title: 'Part 2',
-                            }, {
-                                key: '3',
-                                href: '#notes',
-                                title: 'Part 3',
-                            },
-                        ]}>
-                </Anchor>
-                <div id="feature">
-                    <Divider orientation={"center"}>
-                        <Typography.Title level={3}>产品特色</Typography.Title>
-                    </Divider>
-                    <div dangerouslySetInnerHTML={{__html: product.features}} style={{marginTop: 50}}></div>
-                </div>
-
-                <div style={{marginTop: 40}} id="fees">
-                    <Divider orientation={"center"}>
-                        <Typography.Title level={3}>费用</Typography.Title>
-                    </Divider>
-                    <div dangerouslySetInnerHTML={{__html: product.fees}} style={{marginTop: 50}}></div>
-                </div>
-                <div style={{marginTop: 40}} id="notes">
-                    <Divider orientation={"center"}>
-                        <Typography.Title level={3}>费用</Typography.Title>
-                    </Divider>
-                    <div dangerouslySetInnerHTML={{__html: product.notes}} style={{marginTop: 50}}></div>
-                </div>
-                <Divider plain>
+        <MainLayout>
+            <>
+                <Row>
+                    <Col span={13}>
+                        <ProductIntro coupons={product.coupons} discount={product.discount}
+                                      touristRoutePictures={product.touristRoutePictures} price={product.price}
+                                      rating={product.rating}
+                                      shortDescription={product.shortDescription}
+                                      title={product.title}></ProductIntro>
+                    </Col>
+                    <Col span={11}>
+                        <Space direction="vertical" size={12}>
+                            <RangePicker style={{marginTop: "40px"}}/>
+                        </Space>
+                    </Col>
+                </Row>
+            </>
+            <Anchor className="Anchor" direction="horizontal"
+                    items={[
+                        {
+                            key: '1',
+                            href: '#feature',
+                            title: 'Part 1',
+                        }, {
+                            key: '2',
+                            href: '#fees',
+                            title: 'Part 2',
+                        }, {
+                            key: '3',
+                            href: '#notes',
+                            title: 'Part 3',
+                        },
+                    ]}>
+            </Anchor>
+            <div id="feature">
+                <Divider orientation={"center"}>
                     <Typography.Title level={3}>产品特色</Typography.Title>
                 </Divider>
-                <ProductComments data={commentMockData}></ProductComments>
-
+                <div dangerouslySetInnerHTML={{__html: product.features}} style={{marginTop: 50}}></div>
             </div>
-        </div>
+
+            <div style={{marginTop: 40}} id="fees">
+                <Divider orientation={"center"}>
+                    <Typography.Title level={3}>费用</Typography.Title>
+                </Divider>
+                <div dangerouslySetInnerHTML={{__html: product.fees}} style={{marginTop: 50}}></div>
+            </div>
+            <div style={{marginTop: 40}} id="notes">
+                <Divider orientation={"center"}>
+                    <Typography.Title level={3}>费用</Typography.Title>
+                </Divider>
+                <div dangerouslySetInnerHTML={{__html: product.notes}} style={{marginTop: 50}}></div>
+            </div>
+            <Divider plain>
+                <Typography.Title level={3}>产品特色</Typography.Title>
+            </Divider>
+            <ProductComments data={commentMockData}></ProductComments>
+        </MainLayout>
     )
 }

@@ -60,8 +60,6 @@ export const Header: React.FC = () => {
     }
     const navigate = useNavigate();
     return (
-        <div>
-            <div className="w">
                 <Layout.Header className="app-header">
                     <div className="app-header-slong">
                         <div>
@@ -129,7 +127,5 @@ export const Header: React.FC = () => {
                         ]}
                     />
                 </Layout.Header>
-            </div>
-        </div>
     );
 };

@@ -6,11 +6,13 @@ import {withTranslation, WithTranslation} from "react-i18next";
 import {Spin} from "antd/lib";
 import {connect} from "react-redux";
 import {RootState} from "../../store/store";
-import { giveMeDataActionCreateor
+import {
+    giveMeDataActionCreateor
 } from "../../store/recommendProduct/recommmendProducrAction"
 import {LoadingOutlined} from "@ant-design/icons";
+import {MainLayout} from "../../layout";
 
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>
 
 //创建connect映射数据
 const mapStateToProps = (state: RootState) => {
@@ -58,8 +60,7 @@ class HomePageComponent extends React.Component<PropsType> {
             return <>网站出错: {error}</>
         }
         return (
-            <div className="page-content w">
-                <Header/>
+            <MainLayout>
                 <div>
                     <Row>
                         <Col span={6}>
@@ -82,7 +83,7 @@ class HomePageComponent extends React.Component<PropsType> {
                                                  type="success"> {t("home_page.domestic_travel")} </Typography.Title>}
                         products={productList[2].touristRoutes} sideImage={sideImage1}></ProductCollection>
                 </div>
-            </div>
+            </MainLayout>
         )
     }
 }

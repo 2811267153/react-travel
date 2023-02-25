@@ -4,12 +4,13 @@ import {useLocation, useParams} from "react-router-dom";
 import {useAppDispatch, useSelector} from "../../store/hooks";
 import {searchProduct} from "../../store/produceSearch/slice";
 import {Spin} from "antd";
-import { LoadingOutlined } from '@ant-design/icons';
+import {LoadingOutlined} from '@ant-design/icons';
+import {MainLayout} from "../../layout";
 //创建对应的传参类型
 type MathParams = {
     keywords: string
 }
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>
 export const SearchPage: React.FC = () => {
     const {keywords} = useParams<MathParams>();
 //获取store里面的数据
@@ -25,13 +26,13 @@ export const SearchPage: React.FC = () => {
     //在react-router-dom中引入 useLocation, 使用useLocation获取Location中的数据
     const location = useLocation()
     //使用 useEffect 在第一个函数中传入表达式, 第二个参数传入 location 表示 在 location 变化时调用第一个函数
-    useEffect(()=> {
-        if(keywords) {
+    useEffect(() => {
+        if (keywords) {
             dispatch(searchProduct({nextPage: 1, pageSize: 10, keywords}))
         }
     }, [keywords])
     const onPageChange = (nextPage, pageSize) => {
-        if(keywords) {
+        if (keywords) {
             dispatch(searchProduct({nextPage, pageSize, keywords}))
         }
     }
@@ -54,19 +55,16 @@ export const SearchPage: React.FC = () => {
         return <>网站出错: {error}</>
     }
     return (
+        <MainLayout>
 
-        <>
-            <Header></Header>
-            <div className="w page-content">
-                {/*分类过滤器*/}
-                <div className="product-list-contents">
-                    <FilterArea></FilterArea>
-                </div>
-                {/*//产品列表*/}
-                <div className="product-list-contents">
-                    <ProductList data={productList} paging={pagination} onPageChange={onPageChange}></ProductList>
-                </div>
+            {/*分类过滤器*/}
+            <div className="product-list-contents">
+                <FilterArea></FilterArea>
             </div>
-        </>
+            {/*//产品列表*/}
+            <div className="product-list-contents">
+                <ProductList data={productList} paging={pagination} onPageChange={onPageChange}></ProductList>
+            </div>
+        </MainLayout>
     )
 }

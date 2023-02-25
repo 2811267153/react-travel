@@ -15,8 +15,8 @@ const App: React.FC = (props) => {
                 <Route  path="/register" element={<RegisterPage />}/>
                 <Route path="/search/" element={<SearchPage />}>
                     <Route path=':keywords' element={<SearchPage />}></Route>
-                    <Route path='' element={<SearchPage />}></Route>
-                </Route>
+                        <Route path='' element={<SearchPage />}></Route>
+                    </Route>
                 <Route path='*' element={<h1>页面不存在</h1>}></Route>
             </Routes>
         </div>
