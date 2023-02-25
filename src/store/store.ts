@@ -3,7 +3,7 @@ import languagRedux from "./language/languagRedux";
 import RecommendProductRedux from "./recommendProduct/recommendProductRedux";
 import thunk from "redux-thunk";
 import {actionLog} from "./middlewares/actionLog";
-import {combineReducers} from "@reduxjs/toolkit"
+import {combineReducers, configureStore} from "@reduxjs/toolkit"
 import {productDetailSlice} from "./productDetail/slice"
 
 //讲languagRedux和RecommendProductRedux集体暴露出去/
@@ -13,7 +13,11 @@ const rootRedux = combineReducers({
     recommendProduct: RecommendProductRedux,
     productDetail: productDetailSlice.reducer
 })
-//使用中间件时 只需要将他作为applyMiddleware的第二个参数传入就好了
-const store = createStore(rootRedux, applyMiddleware(thunk, actionLog))
+//在使用configureStore时 要求传入两个参数{ reducer: rootRedux,}
+const store = configureStore({
+    reducer: rootRedux,
+    devTools: true,
+    middleware: ((getDefaultMiddleware) =>getDefaultMiddleware().concat(actionLog))
+})
 export type RootState = ReturnType<typeof store.getState>
 export default store;
