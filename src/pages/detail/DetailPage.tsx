@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
-import axios from "axios";
 import {Header, ProductIntro, ProductComments} from "../../components";
-import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor, Menu} from "antd";
+import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor,} from "antd";
 import {commentMockData} from "../../components/ProductComments/mockup";
-import {productDetailSlice} from "../../store/productDetail/slice";
-import {useSelector} from "../../store/hooks";
-import {useDispatch} from "react-redux";
+import {getProductDetail} from "../../store/productDetail/slice";
+import {useAppDispatch, useSelector,} from "../../store/hooks";
 
+type MatchParams = {
+    touristRouteId: string;
+};
 export const DetailPage: React.FC = () => {
-    const props = useParams<"touristRouteId">()
+    const {touristRouteId} = useParams<MatchParams>()
     // const [loading, setLoading] = useState<boolean>(true)
     // const [product, setProducr] = useState<any>(null)
     // const [error, setError] = useState<string | null>(null)
@@ -17,24 +18,14 @@ export const DetailPage: React.FC = () => {
     const error = useSelector(state => state.productDetail.error)
     const product = useSelector(state => state.productDetail.data)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const {RangePicker} = DatePicker;
     useEffect(() => {
-        //这里的actions是一个函数 所以必须要小括号
-        dispatch(productDetailSlice.actions.fetchStart())
-        const fetchData = async () => {
-            try {
-                const {data} = await axios.get(`http://123.56.149.216:8080/api/touristRoutes/${props.touristRouteId}`)
-                dispatch(productDetailSlice.actions.fetchSuccess(data))
-
-            } catch (e) {
-                if(e instanceof Error){
-                    dispatch(productDetailSlice.actions.fetchFail(e.message))
-                }
-            }
+        if({touristRouteId}){
+            // 因为这里的dispatch 类型和我们传入的类型不一致 所以 我们需要手动在store添加一个类型
+            dispatch(getProductDetail(touristRouteId!))
         }
-        fetchData()
     }, [])
     if (loading) {
         return <Spin size="large"></Spin>
