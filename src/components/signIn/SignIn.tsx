@@ -1,30 +1,48 @@
-import React from 'react';
-import {Button, Checkbox, Form, Input, message} from 'antd';
+import React, {useEffect} from 'react';
+import {Button, Checkbox, Form, Input, message, Spin} from 'antd';
 import "./index.css"
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {useAppDispatch, useSelector} from "../../store/hooks";
+import {signIn} from "../../store/user/slice";
+import {LoadingOutlined} from "@ant-design/icons";
 
 
 export const SignIn: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
+    const loading = useSelector(state => state.user.loading)
+    const token = useSelector(state => state.user.token)
+    const error = useSelector(state => state.user.error)
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>
+
+
+    useEffect(() => {
+        if(token !==  null) {
+            navigate("/")
+        }
+    }, [token])
     const onFinishFailed = (errorInfo: any) => {
         messageApi.info('提交失败, 请重试!');
     };
-    const onFinish = async (values: any) => {
+    const onFinish =  (values: any) => {
 
-        try {
-            await axios.post("http://123.56.149.216:8080/auth/login", {
-                email: values.username, password: values.password,
-            })
-            messageApi.info('提交成功, 正在为你打开登陆页面').then(() => {
-                navigate('/singIn')
-            });
-        } catch (e) {
-            messageApi.info('提交失败, 请重试!');
-        }
+        // try {
+        //     await axios.post("http://123.56.149.216:8080/auth/login", {
+        //         email: values.username, password: values.password,
+        //     })
+        //     messageApi.info('提交成功, 正在为你打开登陆页面').then(() => {
+        //         navigate('/singIn')
+        //     });
+        // } catch (e) {
+        //     messageApi.info('提交失败, 请重试!');
+        // }
+        dispatch(signIn({email: values.username, password: values.password}))
     };
-
+    if (error) {
+        return <>网站出错: {error}</>
+    }
     return (
         <>
             {contextHolder}
@@ -60,7 +78,7 @@ export const SignIn: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{offset: 0, span: 24}}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         Submit
                     </Button>
                 </Form.Item>

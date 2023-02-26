@@ -49,6 +49,8 @@ export const Header: React.FC = () => {
 
     //展开hooks
     const {t} = useTranslation()
+    const navigate = useNavigate();
+    const {token} = useSelector(state => state.user.token)
     const menuClickHandler = (e: any) => {
         if (e.key === "new") {
             //处理新语言提那家
@@ -58,7 +60,6 @@ export const Header: React.FC = () => {
             dispatch(changeLanguageActionCreator(e.key))
         }
     }
-    const navigate = useNavigate();
     return (
                 <Layout.Header className="app-header">
                     <div className="app-header-slong">
