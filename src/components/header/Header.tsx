@@ -1,6 +1,6 @@
 /** @format */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Button, Layout, Input, Menu, Dropdown, Space} from 'antd';
 import Typography from 'antd/es/typography';
@@ -8,8 +8,7 @@ import type {MenuProps} from 'antd';
 import '../../App.css';
 import {DownOutlined, GlobalOutlined} from '@ant-design/icons';
 import {useNavigate,} from "react-router-dom";
-import {useSelector} from "../../store/hooks"
-import {useDispatch} from "react-redux";
+import {useAppDispatch, useSelector} from "../../store/hooks"
 import {Dispatch} from "redux";
 import {
     addLanguageActionCreator,
@@ -18,9 +17,14 @@ import {
 } from "../../store/language/languageActions";
 import {changeLanguage} from "i18next";
 import {useTranslation} from "react-i18next";
+import jwtDecode, {JwtPayload as DefaultJwtPayload} from "jwt-decode";
+import {userSlice} from "../../store/user/slice";
 // import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
 
-
+//实现自己的 JwtPayload 需要继承子 JwtPayload 为我们提供的接口中
+interface JwtPayload extends DefaultJwtPayload {
+    username: string
+}
 
 const items: MenuProps['items'] = [
     {key: 1, label: '汉语', icon: <GlobalOutlined/>},
@@ -45,12 +49,13 @@ export const Header: React.FC = () => {
     const history = useNavigate()
     const language = useSelector((state) => state.language.language)
     const languageList = useSelector((state) => state.language.languageList)
-    const dispatch = useDispatch<Dispatch<LanguageActionType>>()
+    const dispatch = useAppDispatch()
 
     //展开hooks
     const {t} = useTranslation()
     const navigate = useNavigate();
-    const {token} = useSelector(state => state.user.token)
+    const token = useSelector(state => state.user.token)
+    const [username, setUsername] = useState("");
     const menuClickHandler = (e: any) => {
         if (e.key === "new") {
             //处理新语言提那家
@@ -59,6 +64,17 @@ export const Header: React.FC = () => {
            // @ts-ignore
             dispatch(changeLanguageActionCreator(e.key))
         }
+    }
+    useEffect(() => {
+        if(token) {
+            const tokens = jwtDecode<JwtPayload>(token)
+            setUsername(tokens.username)
+        }
+    }, [token])
+    const onLogout = () => {
+        dispatch(userSlice.actions.logOut())
+        navigate('/')
+        window.location.reload()
     }
     return (
                 <Layout.Header className="app-header">
@@ -80,14 +96,27 @@ export const Header: React.FC = () => {
                                 {t("header.add_new_language")}
                             </Typography.Text>
                         </div>
-                        <Button.Group style={{border: "none"}}>
-                            <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("register")}>
-                                {t("header.register")}
-                            </Button>
-                            <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("singIn")}>
-                                {t("header.signin")}
-                            </Button>
-                        </Button.Group>
+                        {token ?
+                            <Button.Group style={{border: "none"}}>
+                                <span>{t("header.welcome")}
+                                    <Typography.Text>{username}</Typography.Text>
+                                </span>
+                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("singIn")}>
+                                    {t("header.shoppingCart")}
+                                </Button>
+                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={onLogout}>
+                                    {t("header.signOut")}
+                                </Button>
+                            </Button.Group> :
+                            <Button.Group style={{border: "none"}}>
+                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("register")}>
+                                    {t("header.register")}
+                                </Button>
+                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("singIn")}>
+                                    {t("header.signin")}
+                                </Button>
+                            </Button.Group>
+                        }
                     </div>
 
                     <Typography.Title onClick={() => history('/')}
