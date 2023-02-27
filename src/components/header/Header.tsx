@@ -100,7 +100,7 @@ export const Header: React.FC = () => {
                                 <span>{t("header.welcome")}
                                     <Typography.Text>{username}</Typography.Text>
                                 </span>
-                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => history("singIn")}>
+                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => navigate("/shoppingCart")}>
                                     {t("header.shoppingCart")}
                                 </Button>
                                 <Button  style={{border: "none"}} type="link" className="btn-login" onClick={onLogout}>

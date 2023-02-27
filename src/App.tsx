@@ -1,9 +1,16 @@
 /** @format */
 
 import React from 'react';
-import {Route, Routes} from 'react-router-dom';
-import {DetailPage, HomePage, RegisterPage, SignInPage, SearchPage} from './pages';
+import {Navigate, Route, Routes} from 'react-router-dom';
+import {DetailPage, HomePage, RegisterPage, SignInPage, SearchPage, ShoppingCart} from './pages';
 import "./App.css"
+import {useSelector} from "./store/hooks";
+
+//创建私有路由
+const PrivateRoute = ({children}) => {
+ const  jwt =  useSelector(state => state.user.token)
+    return jwt ? children : <Navigate to='/singIn'></Navigate>
+}
 
 const App: React.FC = (props) => {
     return (
@@ -17,6 +24,9 @@ const App: React.FC = (props) => {
                     <Route path=':keywords' element={<SearchPage />}></Route>
                         <Route path='' element={<SearchPage />}></Route>
                     </Route>
+                <Route path='/shoppingCart' element={<PrivateRoute>
+                    <ShoppingCart></ShoppingCart>
+                </PrivateRoute>}></Route>
                 <Route path='*' element={<h1>页面不存在</h1>}></Route>
             </Routes>
         </div>
