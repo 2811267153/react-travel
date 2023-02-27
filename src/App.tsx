@@ -1,10 +1,11 @@
 /** @format */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {DetailPage, HomePage, RegisterPage, SignInPage, SearchPage, ShoppingCart} from './pages';
 import "./App.css"
-import {useSelector} from "./store/hooks";
+import {useAppDispatch, useSelector} from "./store/hooks";
+import {getShoppingCart} from "./store/productShoppingCart/slice";
 
 //创建私有路由
 const PrivateRoute = ({children}) => {
@@ -13,6 +14,14 @@ const PrivateRoute = ({children}) => {
 }
 
 const App: React.FC = (props) => {
+    const jwt = useSelector(state => state.user.token)
+    const dispatch = useAppDispatch()
+
+    // useEffect(() => {
+    //     if(jwt) {
+    //         dispatch(getShoppingCart(jwt))
+    //     }
+    // }, [dispatch, jwt])
     return (
         <div className="app">
             <Routes>

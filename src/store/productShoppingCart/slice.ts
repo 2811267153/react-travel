@@ -37,12 +37,14 @@ export const addShoppingCart = createAsyncThunk(
     "shoppingCard/addShoppingCart",
     async (prameters: {
         jwt: string,
-        touristRouteId: string
+        id: string
     }, thunkAPI) => {
 
+        console.log(prameters.jwt)
         //使用createAsyncThunk自动生成的 pending fulfilled rejected
         const {data} = await axios.post(`http://123.56.149.216:8080/api/shoppingCart/items`,{
-            touristRouteId: prameters.touristRouteId
+            touristRouteId: prameters.id
+
         }, {
             headers: {
                 Authorization: `bearer ${prameters.jwt}`
@@ -51,7 +53,19 @@ export const addShoppingCart = createAsyncThunk(
         return data.shoppingCardItems
     }
 )
+export const checkOut = createAsyncThunk(
+    "shoppingCard/checkOut",
+    async (   jwt: string, thunkAPI) => {
 
+        //使用createAsyncThunk自动生成的 pending fulfilled rejected
+        const {data} = await axios.post(`http://123.56.149.216:8080/api/shoppingCart/checkout`, null, {
+            headers: {
+                Authorization: `bearer ${jwt}`
+            }
+        })
+        return data
+    }
+)
 //删除购物车
 export const clearShoppingCart = createAsyncThunk(
     "shoppingCard/clearShoppingCart",
@@ -130,6 +144,22 @@ export const shoppingCardSlice = createSlice({
             const ddd = action.payload
             state.loading = false
             state.error = ddd
-        }
+        },
+        [checkOut.pending.type]: (state) => {
+            state.loading = true
+        },
+        //定义接口成功时的数据
+        [checkOut.fulfilled.type]: (state) => {
+            state.items = []
+            state.loading = false
+
+            state.error = null
+        },
+        //定义接口失败时的数据
+        [checkOut.rejected.type]: (state, action) => {
+            const ddd = action.payload
+            state.loading = false
+            state.error = ddd
+        },
     }
 })

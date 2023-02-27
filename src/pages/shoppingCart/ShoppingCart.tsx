@@ -3,8 +3,19 @@ import {MainLayout} from "../../layout";
 import {Col, Row} from "antd";
 import {PaymentCard, ProductList } from "../../components";
 import {Affix} from "antd/lib";
+import {useAppDispatch, useSelector} from "../../store/hooks";
+import {useNavigate} from "react-router-dom";
+import {
+    clearShoppingCart,
+    checkOut,
+} from "../../store/productShoppingCart/slice";
 
 export const ShoppingCart: React.FC = () => {
+    const loading = useSelector(state => state.shoppingCard.loading)
+    const shoppingCartItems = useSelector(state => state.shoppingCard.items)
+    const jwt = useSelector((s) => s.user.token) as string;
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
     return (
         <MainLayout>
             <Row>
@@ -16,7 +27,32 @@ export const ShoppingCart: React.FC = () => {
                 <Col span={8}>
                     <Affix>
                         <div>
-                            {/*<PaymentCard></PaymentCard>*/}
+                            <PaymentCard originalPrice={shoppingCartItems
+                                .map((s) => s.originalPrice)
+                                .reduce((a, b) => a + b, 0)}
+                                         price={shoppingCartItems
+                                             .map(
+                                                 (s) =>
+                                                     s.originalPrice *
+                                                     (s.discountPresent ? s.discountPresent : 1)
+                                             )
+                                             .reduce((a, b) => a + b, 0)} loading={loading}
+                                         onCheckout={() => {
+                                             if (shoppingCartItems.length <= 0) {
+                                                 return;
+                                             }
+                                             dispatch(checkOut(jwt));
+                                             navigate("/placeOrder");
+                                         }}
+                                         onShoppingCartClear={() => {
+                                             dispatch(
+                                                 clearShoppingCart({
+                                                     jwt,
+                                                     itemsIds: shoppingCartItems.map((s) => s.id),
+                                                 })
+                                             );
+                                         }}
+                             ></PaymentCard>
                         </div>
                     </Affix>
                 </Col>

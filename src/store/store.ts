@@ -38,8 +38,8 @@ const store = configureStore({
     middleware: ((getDefaultMiddleware) =>getDefaultMiddleware().concat(actionLog))
 })
 //3 使用 persistStore 创建一个新的持续化存储的store
-const persistor = persistStore(store)
+const persistor  = persistStore(store)
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 //在使用时 导出两个store
-export default {store,persistor};
+export default {store,persistor };

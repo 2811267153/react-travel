@@ -56,6 +56,9 @@ export const Header: React.FC = () => {
     const navigate = useNavigate();
     const token = useSelector(state => state.user.token)
     const [username, setUsername] = useState("");
+    const shoppingCartItems  = useSelector(state => state.shoppingCard.items)
+    console.log(shoppingCartItems)
+    const shoppingCartLiading = useSelector(state => state.shoppingCard.loading)
     const menuClickHandler = (e: any) => {
         if (e.key === "new") {
             //处理新语言提那家
@@ -100,8 +103,8 @@ export const Header: React.FC = () => {
                                 <span>{t("header.welcome")}
                                     <Typography.Text>{username}</Typography.Text>
                                 </span>
-                                <Button  style={{border: "none"}} type="link" className="btn-login" onClick={() => navigate("/shoppingCart")}>
-                                    {t("header.shoppingCart")}
+                                <Button loading={shoppingCartLiading} style={{border: "none"}} type="link" className="btn-login" onClick={() => navigate("/shoppingCart")}>
+                                    {t("header.shoppingCart")} ({shoppingCartItems.length})
                                 </Button>
                                 <Button  style={{border: "none"}} type="link" className="btn-login" onClick={onLogout}>
                                     {t("header.signOut")}

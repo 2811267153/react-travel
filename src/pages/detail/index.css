@@ -1,0 +1,12 @@
+.to_pay {
+    height: 400px;
+    width: 100%;
+    text-align: right;
+    padding: 10px;
+    position: relative;
+}
+.to_pay .pay-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
+}

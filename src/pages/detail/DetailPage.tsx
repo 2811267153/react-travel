@@ -1,12 +1,14 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Header, ProductIntro, ProductComments} from "../../components";
-import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor,} from "antd";
+import {Col, DatePicker, Row, Spin, Space, Divider, Typography, Anchor, Button, message} from "antd";
 import {commentMockData} from "../../components/ProductComments/mockup";
 import {getProductDetail} from "../../store/productDetail/slice";
 import {useAppDispatch, useSelector,} from "../../store/hooks";
 import {LoadingOutlined} from '@ant-design/icons';
 import {MainLayout} from "../../layout";
+import './index.css'
+import {addShoppingCart} from "../../store/productShoppingCart/slice";
 
 type MatchParams = {
     touristRouteId: string;
@@ -20,6 +22,8 @@ export const DetailPage: React.FC = () => {
     const loading = useSelector(state => state.productDetail.loading)
     const error = useSelector(state => state.productDetail.error)
     const product = useSelector(state => state.productDetail.data)
+    const jwt = useSelector(state => state.user.token)
+    const [messageApi, contextHolder] = message.useMessage();
 
     const dispatch = useAppDispatch()
 
@@ -48,9 +52,20 @@ export const DetailPage: React.FC = () => {
     if (error) {
         return <>网站出错: {error}</>
     }
+
+    const addShoppingCartBtn = (product) => {
+        return () => {
+            if(jwt) {
+                const newPriduct = {jwt,...product}
+                dispatch(addShoppingCart(newPriduct))
+                messageApi.success('添加购物车完成');
+            }
+        }
+    }
     return (
         <MainLayout>
             <>
+                {contextHolder}
                 <Row>
                     <Col span={13}>
                         <ProductIntro coupons={product.coupons} discount={product.discount}
@@ -60,9 +75,16 @@ export const DetailPage: React.FC = () => {
                                       title={product.title}></ProductIntro>
                     </Col>
                     <Col span={11}>
-                        <Space direction="vertical" size={12}>
-                            <RangePicker style={{marginTop: "40px"}}/>
-                        </Space>
+                        <div className="to_pay">
+                            <div>
+                                <Space direction="vertical" size={12}>
+                                    <RangePicker autoFocus/>
+                                </Space>
+                            </div>
+                            <div>
+                                <Button type="primary" danger className="pay-btn" onClick={addShoppingCartBtn(product)}>添加购物车</Button>
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             </>
