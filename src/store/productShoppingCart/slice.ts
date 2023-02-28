@@ -1,165 +1,153 @@
-//定义三个类型存储状态
-
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface ProductShoppingcardDetailState {
-    loading: boolean,
-    error: string | null,
-    items: any[]
+interface ShoppingCarttate {
+    loading: boolean;
+    error: string | null;
+    items: any[];
 }
 
-//定义初始化数据
-const initialState: ProductShoppingcardDetailState = {
+const initialState: ShoppingCarttate = {
     loading: true,
     error: null,
-    items: []
-}
-//使用createAsyncThunk创建新数据
+    items: [],
+};
 
-//获取购物车列表函数
 export const getShoppingCart = createAsyncThunk(
-    "shoppingCard/getShoppingCart",
+    "shoppingCart/getShoppingCart",
     async (jwt: string, thunkAPI) => {
-
-        //使用createAsyncThunk自动生成的 pending fulfilled rejected
-        const {data} = await axios.get(`http://123.56.149.216:8080/api/shoppingCart`, {
-            headers: {
-                Authorization: `bearer ${jwt}`
+        const { data } = await axios.get(
+            `http://123.56.149.216:8080/api/shoppingCart`,
+            {
+                headers: {
+                    Authorization: `bearer ${jwt}`,
+                },
             }
-        })
-        return data.shoppingCardItems
+        );
+        return data.shoppingCartItems;
     }
-)
+);
 
-//添加购物车列表函数
-export const addShoppingCart = createAsyncThunk(
-    "shoppingCard/addShoppingCart",
-    async (prameters: {
-        jwt: string,
-        id: string
-    }, thunkAPI) => {
-
-        console.log(prameters.jwt)
-        //使用createAsyncThunk自动生成的 pending fulfilled rejected
-        const {data} = await axios.post(`http://123.56.149.216:8080/api/shoppingCart/items`,{
-            touristRouteId: prameters.id
-
-        }, {
-            headers: {
-                Authorization: `bearer ${prameters.jwt}`
+export const addShoppingCartItem = createAsyncThunk(
+    "shoppingCart/addShoppingCartItem",
+    async (parameters: { jwt: string; id: string }, thunkAPI) => {
+        console.log(parameters)
+        const { data } = await axios.post(
+            `http://123.56.149.216:8080/api/shoppingCart/items`,
+            {
+                touristRouteId: parameters.id,
+            },
+            {
+                headers: {
+                    Authorization: `bearer ${parameters.jwt}`,
+                },
             }
-        })
-        return data.shoppingCardItems
+        );
+        return data.shoppingCartItems;
     }
-)
-export const checkOut = createAsyncThunk(
-    "shoppingCard/checkOut",
-    async (   jwt: string, thunkAPI) => {
-
-        //使用createAsyncThunk自动生成的 pending fulfilled rejected
-        const {data} = await axios.post(`http://123.56.149.216:8080/api/shoppingCart/checkout`, null, {
-            headers: {
-                Authorization: `bearer ${jwt}`
+);
+export const clearShoppingCartItem = createAsyncThunk(
+    "shoppingCart/clearShoppingCartItem",
+    async (parameters: { jwt: string; itemIds: number[] }, thunkAPI) => {
+        return await axios.delete(
+            `http://123.56.149.216:8080/api/shoppingCart/items/(${parameters.itemIds.join(
+                ","
+            )})`,
+            {
+                headers: {
+                    Authorization: `bearer ${parameters.jwt}`,
+                },
             }
-        })
-        return data
+        );
     }
-)
-//删除购物车
-export const clearShoppingCart = createAsyncThunk(
-    "shoppingCard/clearShoppingCart",
-    async (prameters: {
-        jwt: string,
-        itemsIds: number[]
-    }, thunkAPI) => {
-
-        //使用createAsyncThunk自动生成的 pending fulfilled rejected
-        return  await axios.delete(`http://123.56.149.216:8080/api/shoppingCart/items/(${prameters.itemsIds.join(',')})`, {
-            headers: {
-                Authorization: `bearer ${prameters.jwt}`
+);
+export const checkout = createAsyncThunk(
+    "shoppingCart/checkout",
+    async (jwt: string, thunkAPI) => {
+        const { data } = await axios.post(
+            `http://123.56.149.216:8080/api/shoppingCart/checkout`,
+            null,
+            {
+                headers: {
+                    Authorization: `bearer ${jwt}`,
+                },
             }
-        })
+        );
+        return data;
     }
-)
+);
 
-//
-export const shoppingCardSlice = createSlice({
-    name: 'shoppingCard',
+export const shoppingCartSlice = createSlice({
+    name: "shoppingCart",
     initialState,
-    reducers: {
-    },
+    reducers: {},
     extraReducers: {
-        //使用使用createAsyncThunk自动生成的reducers时 要是有extraReducers, 并对对象进行重命名
-        //如果使用的时ts代码 要给名称后面加上 .type 字段
-        //定义初始化时的数据
         [getShoppingCart.pending.type]: (state) => {
-            state.loading = true
+            state.loading = true;
         },
-        //定义接口成功时的数据
         [getShoppingCart.fulfilled.type]: (state, action) => {
-            state.items = action.payload
-            console.log(" action.payload",  action.payload)
-            state.loading = false
-
-            state.error = null
+            state.items = action.payload;
+            state.loading = false;
+            state.error = null;
         },
-        //定义接口失败时的数据
-        [getShoppingCart.rejected.type]: (state, action) => {
-            const ddd = action.payload
-            state.loading = false
-            state.error = ddd
+        [getShoppingCart.rejected.type]: (
+            state,
+            action: PayloadAction<string | null>
+        ) => {
+            state.loading = false;
+            state.error = action.payload;
         },
-
-        [addShoppingCart.pending.type]: (state) => {
-            state.loading = true
+        [addShoppingCartItem.pending.type]: (state) => {
+            state.loading = true;
         },
-        //定义接口成功时的数据
-        [addShoppingCart.fulfilled.type]: (state, action) => {
-            state.items = action.payload
-            console.log(" action.payload",  action.payload)
-            state.loading = false
-
-            state.error = null
+        [addShoppingCartItem.fulfilled.type]: (state, action) => {
+            state.items = action.payload;
+            state.loading = false;
+            state.error = null;
         },
-        //定义接口失败时的数据
-        [addShoppingCart.rejected.type]: (state, action) => {
-            const ddd = action.payload
-            state.loading = false
-            state.error = ddd
+        [addShoppingCartItem.rejected.type]: (
+            state,
+            action: PayloadAction<string | null>
+        ) => {
+            state.loading = false;
+            state.error = action.payload;
         },
-
-        [clearShoppingCart.pending.type]: (state) => {
-            state.loading = true
+        [clearShoppingCartItem.pending.type]: (state) => {
+            state.loading = true;
         },
-        //定义接口成功时的数据
-        [clearShoppingCart.fulfilled.type]: (state) => {
-            state.items = []
-            state.loading = false
-
-            state.error = null
+        [clearShoppingCartItem.fulfilled.type]: (state) => {
+            state.items = [];
+            state.loading = false;
+            state.error = null;
         },
-        //定义接口失败时的数据
-        [clearShoppingCart.rejected.type]: (state, action) => {
-            const ddd = action.payload
-            state.loading = false
-            state.error = ddd
+        [clearShoppingCartItem.rejected.type]: (
+            state,
+            action: PayloadAction<string | null>
+        ) => {
+            state.loading = false;
+            state.error = action.payload;
         },
-        [checkOut.pending.type]: (state) => {
-            state.loading = true
+        [clearShoppingCartItem.rejected.type]: (
+            state,
+            action: PayloadAction<string | null>
+        ) => {
+            state.loading = false;
+            state.error = action.payload;
         },
-        //定义接口成功时的数据
-        [checkOut.fulfilled.type]: (state) => {
-            state.items = []
-            state.loading = false
-
-            state.error = null
+        [checkout.pending.type]: (state) => {
+            state.loading = true;
         },
-        //定义接口失败时的数据
-        [checkOut.rejected.type]: (state, action) => {
-            const ddd = action.payload
-            state.loading = false
-            state.error = ddd
+        [checkout.fulfilled.type]: (state, action) => {
+            state.items = [];
+            state.loading = false;
+            state.error = null;
         },
-    }
-})
+        [checkout.rejected.type]: (
+            state,
+            action: PayloadAction<string | null>
+        ) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+    },
+});

@@ -24,7 +24,7 @@ interface Product {
 }
 interface PropsType {
     data: Product[];
-    paging: any;
+    paging?: any;
     onPageChange?: (nextPage: number, pageSize: number) => void;
 }
 
@@ -57,7 +57,7 @@ const IconText = ({ icon, text }) => (
 );
 export const ProductList: React.FC<PropsType> = ({
                                                      data,
-                                                     paging,
+                                                     paging = 1,
                                                      onPageChange,
                                                  }) => {
     const products = listData(data);

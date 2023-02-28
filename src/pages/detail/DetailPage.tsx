@@ -8,7 +8,7 @@ import {useAppDispatch, useSelector,} from "../../store/hooks";
 import {LoadingOutlined} from '@ant-design/icons';
 import {MainLayout} from "../../layout";
 import './index.css'
-import {addShoppingCart} from "../../store/productShoppingCart/slice";
+import {addShoppingCartItem} from "../../store/productShoppingCart/slice";
 
 type MatchParams = {
     touristRouteId: string;
@@ -57,7 +57,7 @@ export const DetailPage: React.FC = () => {
         return () => {
             if(jwt) {
                 const newPriduct = {jwt,...product}
-                dispatch(addShoppingCart(newPriduct))
+                dispatch(addShoppingCartItem(newPriduct))
                 messageApi.success('添加购物车完成');
             }
         }

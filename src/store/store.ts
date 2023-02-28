@@ -9,11 +9,11 @@ import {productSearchSlice} from "./produceSearch/slice";
 import {userSlice} from "./user/slice"
 import {persistStore, persistReducer} from "redux-persist"
 import storage from "redux-persist/lib/storage";
-import {shoppingCardSlice} from "./productShoppingCart/slice";
+import {shoppingCartSlice} from "./productShoppingCart/slice";
 
 
- //1.配置 redux-persist 信息
-const persistConfig =  {
+//1.配置 redux-persist 信息
+const persistConfig = {
     key: "root",
     storage,
     whitelist: ["user"]
@@ -26,20 +26,22 @@ const rootRedux = combineReducers({
     productDetail: productDetailSlice.reducer,
     productSearch: productSearchSlice.reducer,
     user: userSlice.reducer,
-    shoppingCard: shoppingCardSlice.reducer
+    shoppingCard: shoppingCartSlice.reducer
 })
 
 //2.使用 persistReducer 创建一个新的 redcer
-const persistedRedcer = persistReducer(persistConfig, rootRedux)
+const persistedReducer = persistReducer(persistConfig, rootRedux)
 //在使用configureStore时 要求传入两个参数{ reducer: rootRedux,}
 const store = configureStore({
-    reducer: persistedRedcer,
+    reducer: persistedReducer,
     devTools: true,
-    middleware: ((getDefaultMiddleware) =>getDefaultMiddleware().concat(actionLog))
+    middleware: ((getDefaultMiddleware) => {
+        return getDefaultMiddleware({serializableCheck: false,}).concat(actionLog)
+    })
 })
 //3 使用 persistStore 创建一个新的持续化存储的store
-const persistor  = persistStore(store)
+const persistor = persistStore(store)
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 //在使用时 导出两个store
-export default {store,persistor };
+export default {store, persistor};

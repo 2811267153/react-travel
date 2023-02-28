@@ -2,7 +2,7 @@
 
 import React, {useEffect} from 'react';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {DetailPage, HomePage, RegisterPage, SignInPage, SearchPage, ShoppingCart} from './pages';
+import {DetailPage, HomePage, RegisterPage, SignInPage, SearchPage, ShoppingCart, PlaceOrderPage} from './pages';
 import "./App.css"
 import {useAppDispatch, useSelector} from "./store/hooks";
 import {getShoppingCart} from "./store/productShoppingCart/slice";
@@ -17,11 +17,12 @@ const App: React.FC = (props) => {
     const jwt = useSelector(state => state.user.token)
     const dispatch = useAppDispatch()
 
-    // useEffect(() => {
-    //     if(jwt) {
-    //         dispatch(getShoppingCart(jwt))
-    //     }
-    // }, [dispatch, jwt])
+    //页面开始接在时调用api获取购物车中的数据
+    useEffect(() => {
+        if(jwt) {
+            dispatch(getShoppingCart(jwt))
+        }
+    }, [jwt])
     return (
         <div className="app">
             <Routes>
@@ -35,6 +36,9 @@ const App: React.FC = (props) => {
                     </Route>
                 <Route path='/shoppingCart' element={<PrivateRoute>
                     <ShoppingCart></ShoppingCart>
+                </PrivateRoute>}></Route>
+                <Route path='/placeOrder' element={<PrivateRoute>
+                    <PlaceOrderPage></PlaceOrderPage>
                 </PrivateRoute>}></Route>
                 <Route path='*' element={<h1>页面不存在</h1>}></Route>
             </Routes>

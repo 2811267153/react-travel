@@ -6,8 +6,8 @@ import {Affix} from "antd/lib";
 import {useAppDispatch, useSelector} from "../../store/hooks";
 import {useNavigate} from "react-router-dom";
 import {
-    clearShoppingCart,
-    checkOut,
+    clearShoppingCartItem,
+    checkout,
 } from "../../store/productShoppingCart/slice";
 
 export const ShoppingCart: React.FC = () => {
@@ -21,7 +21,7 @@ export const ShoppingCart: React.FC = () => {
             <Row>
                 <Col span={16}>
                     <div>
-                        {/*<ProductList></ProductList>*/}
+                        <ProductList data={shoppingCartItems.map(s => s.touristRoute)}></ProductList>
                     </div>
                 </Col>
                 <Col span={8}>
@@ -41,14 +41,14 @@ export const ShoppingCart: React.FC = () => {
                                              if (shoppingCartItems.length <= 0) {
                                                  return;
                                              }
-                                             dispatch(checkOut(jwt));
+                                             dispatch(checkout(jwt));
                                              navigate("/placeOrder");
                                          }}
                                          onShoppingCartClear={() => {
                                              dispatch(
-                                                 clearShoppingCart({
+                                                 clearShoppingCartItem({
                                                      jwt,
-                                                     itemsIds: shoppingCartItems.map((s) => s.id),
+                                                     itemIds: shoppingCartItems.map((s) => s.id),
                                                  })
                                              );
                                          }}
