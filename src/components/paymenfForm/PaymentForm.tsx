@@ -1,6 +1,6 @@
 import React from "react";
 import { PaymentInputsWrapper, usePaymentInputs } from "react-payment-inputs";
-import images from "react-payment-inputs/images";
+// import images from "react-payment-inputs/images";
 import { Input, Card } from "antd";
 
 export const PaymentForm = () => {
@@ -19,7 +19,7 @@ export const PaymentForm = () => {
             className={"payment-credit-card"}
         >
             <PaymentInputsWrapper {...wrapperProps}>
-                <svg {...getCardImageProps({ images })} />
+                {/*<svg {...getCardImageProps({ images })} />*/}
                 <input {...getCardNumberProps()} />
                 <input {...getExpiryDateProps()} />
                 <input {...getCVCProps()} />

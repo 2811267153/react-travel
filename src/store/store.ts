@@ -10,6 +10,7 @@ import {userSlice} from "./user/slice"
 import {persistStore, persistReducer} from "redux-persist"
 import storage from "redux-persist/lib/storage";
 import {shoppingCartSlice} from "./productShoppingCart/slice";
+import {orderSilce} from "./order/slice";
 
 
 //1.配置 redux-persist 信息
@@ -26,7 +27,8 @@ const rootRedux = combineReducers({
     productDetail: productDetailSlice.reducer,
     productSearch: productSearchSlice.reducer,
     user: userSlice.reducer,
-    shoppingCard: shoppingCartSlice.reducer
+    shoppingCard: shoppingCartSlice.reducer,
+    order: orderSilce.reducer
 })
 
 //2.使用 persistReducer 创建一个新的 redcer
